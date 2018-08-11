@@ -98,7 +98,8 @@ PRODUCT_COPY_FILES += \
 # Optional packages
 PRODUCT_PACKAGES += \
     libemoji \
-    LiveWallpapersPicker
+    LiveWallpapersPicker \
+    LatinIME
 
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
