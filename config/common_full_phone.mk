@@ -6,6 +6,10 @@ IS_PHONE := true
 PRODUCT_COPY_FILES += \
     vendor/aosp/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
 
+# Messaging
+PRODUCT_PACKAGES += \
+    messaging
+
 # Telephony packages
 PRODUCT_PACKAGES += \
     Stk \
