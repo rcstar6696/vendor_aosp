@@ -1,7 +1,3 @@
-PRODUCT_BRAND ?= PixelExperience
-
-PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
-
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.com.google.clientidbase=android-google
@@ -54,13 +50,6 @@ PRODUCT_COPY_FILES += \
     vendor/aosp/prebuilt/common/bin/50-base.sh:system/addon.d/50-base.sh \
     vendor/aosp/prebuilt/common/bin/blacklist:system/addon.d/blacklist
 
-ifeq ($(AB_OTA_UPDATER),true)
-PRODUCT_COPY_FILES += \
-    vendor/aosp/prebuilt/common/bin/backuptool_ab.sh:system/bin/backuptool_ab.sh \
-    vendor/aosp/prebuilt/common/bin/backuptool_ab.functions:system/bin/backuptool_ab.functions \
-    vendor/aosp/prebuilt/common/bin/backuptool_postinstall.sh:system/bin/backuptool_postinstall.sh
-endif
-
 # Some permissions
 PRODUCT_COPY_FILES += \
     vendor/aosp/config/permissions/backup.xml:system/etc/sysconfig/backup.xml \
@@ -69,12 +58,6 @@ PRODUCT_COPY_FILES += \
 # init.d support
 PRODUCT_COPY_FILES += \
     vendor/aosp/prebuilt/common/bin/sysinit:system/bin/sysinit
-
-ifneq ($(TARGET_BUILD_VARIANT),user)
-# userinit support
-PRODUCT_COPY_FILES += \
-    vendor/aosp/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit
-endif
 
 # Copy all custom init rc files
 $(foreach f,$(wildcard vendor/aosp/prebuilt/common/etc/init/*.rc),\
@@ -103,19 +86,6 @@ PRODUCT_PACKAGES += \
     libprotobuf-cpp-full \
     librsjni
 
-# Charger
-PRODUCT_PACKAGES += \
-    charger_res_images
-
-# Filesystems tools
-PRODUCT_PACKAGES += \
-    fsck.exfat \
-    fsck.ntfs \
-    mke2fs \
-    mkfs.exfat \
-    mkfs.ntfs \
-    mount.ntfs
-
 # Storage manager
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.storage_manager.enabled=true
@@ -126,19 +96,24 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 
 DEVICE_PACKAGE_OVERLAYS += vendor/aosp/overlay/common
 
-# Branding
-include vendor/aosp/config/branding.mk
+# Telephony packages
+PRODUCT_PACKAGES += \
+    Stk \
+    CellBroadcastReceiver
 
-# OTA
-include vendor/aosp/config/ota.mk
+# Tethering - allow without requiring a provisioning app
+# (for devices that check this)
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    net.tethering.noprovisioning=true
 
+# Default ringtone
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.config.ringtone=The_big_adventure.ogg
+    
 # GApps
 include vendor/gapps/config.mk
 
 # Pixel Style
 include vendor/pixelstyle/config.mk
 
-# Themes
-#include vendor/themes/config.mk
 
--include $(WORKSPACE)/build_env/image-auto-bits.mk
